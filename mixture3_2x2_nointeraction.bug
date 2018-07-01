@@ -1,0 +1,71 @@
+# Hierarchical 2x2 mixture model
+model{
+    
+  for(i in 1:N){
+        x[i]          ~ dvonmises(mn[i], z[i]* prec_i[i])    	
+    	postpred[i]   ~ dvonmises(mn[i],       prec_i[i])
+    	loglik[i] <- dlogvonmises(x[i], mn[i], prec_i[i])
+    	mn[i]     <- m[i, item[i]]
+		item[i] ~ dcat(Pitem[id[i],i,1:setsize[i]])            #samples item that memory response comes from
+        # Pitem is the probability of reporting the target or 2 nontargets. 
+        # this gets modified on circle trials, increasing Ptarget and decreasing Pnotarget. 
+
+        pitem_i[i,1:setsize[i]] <- Pitem[id[i],i,1:setsize[i]] + cond_eff[i]*c(1,rep((-1/(setsize[i]-1)),(setsize[i]-1)))
+        # effect of condition on probability of choosing target
+        cond_eff[i] <- factor2[i] * factor2_eff_ptar[ id[i] ] + factor1[i] * factor1_eff_ptar[ id[i] ] 
+        # precision on each trial is the gamma-sampled precision for this subject, plus 
+        # some effect of the circle/mask
+        prec_i[i] <- z[i] * ( precision[id[i]] + factor2[i]*factor2_eff_prec[id[i]] + factor1[i]*factor1_eff_prec[id[i]])
+		z[i]    ~ dbern( pm[id[i]] )
+
+  }
+
+for (j in 1:nsubj)  {
+
+  # subject level probabilities for choosing item in memory
+  # drawn from beta distribution around Pmem
+  pm[j]      ~ dbeta(PmA, PmB)T(0.001, 0.999)   #probability that response comes from memory (any item)
+  factor2_eff_prec[j] ~ dnorm( factor2_effect_prec_mean, factor2_effect_prec_sd )
+  factor1_eff_prec[j] ~ dnorm( factor1_effect_prec_mean, factor1_effect_prec_sd )
+  factor2_eff_ptar[j] ~ dnorm( factor2_effect_ptar_mean, factor2_effect_ptar_sd )
+  factor1_eff_ptar[j] ~ dnorm( factor1_effect_ptar_mean, factor1_effect_ptar_sd )
+
+  # subject level Ptarget drawn from beta distribution around Ptarget
+  pt[j] ~ dbeta(PtA, PtB)T(0.001, 0.999)   #probability that response comes from target, given it comes from memory
+
+  # Pitem [ subject, targ/nontarg/notarg ]
+  for (i in 1:N){
+  Pitem[j,i,1] <- pt[j]              #conditional P(target), given response comes from memory
+  for (k in 2:setsize[i]) {
+      Pitem[j,i,k] <- (1-pt[j])/(setsize[i]-1)  #conditional P(recall item k), given response from memory
+  }
+  }
+  precision[j] ~ dgamma(Pshape, Prate)
+}
+    
+	# Priors
+  
+  PmA ~ dexp(0.1)            # sample Odds ratio for choosing 'from memory'
+  PmB ~ dexp(0.1)            #  OR 'not from memory' 
+  Pmem <- PmA/(PmA + PmB)    # Pm estimate on group level (to be monitored)
+  PtA ~ dexp(0.1)            # sample from exponential distribution, odds of choosing target given in mem
+  PtB ~ dexp(0.1)            # odds of choosing nontarget given in memory
+  Ptarget  <- PtA/(PtA + PtB)    # Pt estimate on group level (to be monitored)
+
+  # convert mean / sd into gamma shape/rate 
+  Pshape   <- (Mprecision^2)/(SDPrecision^2) 
+  Prate    <-  Mprecision   /(SDPrecision^2)
+  Mprecision  ~ dexp(0.1)
+  SDPrecision ~ dexp(0.1)        # allow precision to vary according to gamma distribution
+
+  factor2_effect_prec_mean ~ dnorm(0, 0.2)    # prior for effect of additional factor.  
+  factor2_effect_prec_sd   ~ dexp(0.1)    	  # prior for effect of additional factor.  
+  factor2_effect_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of additional factor.  
+  factor2_effect_ptar_sd   ~ dexp(0.1)    	  # prior for effect of additional factor.  
+
+  factor1_effect_prec_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.
+  factor1_effect_prec_sd   ~ dexp(0.1)        # prior for effect of circle relative to arrow.
+  factor1_effect_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.
+  factor1_effect_ptar_sd   ~ dexp(0.1)        # prior for effect of circle relative to arrow.
+	
+}
