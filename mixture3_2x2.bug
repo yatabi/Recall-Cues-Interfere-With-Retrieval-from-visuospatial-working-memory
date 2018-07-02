@@ -71,7 +71,7 @@ for (j in 1:nsubj)  {
   factor1_effect_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.
   factor1_effect_ptar_sd   ~ dexp(0.1)        # prior for effect of circle relative to arrow.
 
-  factor1_factor2_effect_prec_mean ~ dnorm(0, 0.2)
+  factor1_factor2_effect_prec_mean ~ dnorm(0, 0.2)  # prior for interaction term
   factor1_factor2_effect_prec_sd   ~ dexp(0.1) 
   factor1_factor2_effect_ptar_mean ~ dnorm(0, 0.2)  
   factor1_factor2_effect_ptar_sd   ~ dexp(0.1)
