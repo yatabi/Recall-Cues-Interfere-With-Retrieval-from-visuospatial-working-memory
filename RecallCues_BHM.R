@@ -11,19 +11,51 @@ library(circular)
 library(coda)
 load.module("vonmises") #source: Oberauer et al., 2017 (osf.io/wjg7y/) 
 load.module("dic")
-root<-"C:/Users/ytabi/Documents/Hierarchical Bayesian measurement models/Bayes Model Data/" #where your data is stored
+root<-"C:/Users/youne/Documents/Matlab Scripts/Bare Probe/NewHierarchicalModelling/" #where your data is stored
 
 for(EXPT in 1:3) {
 for(effects in 1:7){
 postpred <- 0
 diags <- 0 #0 = none, 1 = Gelman-Rubin Rhat
-parameters <- c("seqpos1_effect_prec_mean", "seqpos2_effect_prec_mean", "seqpos3_effect_prec_mean", "seqpos1_effect_prec_sd", "seqpos2_effect_prec_sd", "seqpos3_effect_prec_sd", "seqpos1_effect_ptar_mean", "seqpos2_effect_ptar_mean", "seqpos3_effect_ptar_mean", "seqpos1_effect_ptar_sd", "seqpos2_effect_ptar_sd", "seqpos3_effect_ptar_sd", "factor1_effect_prec_mean", "factor1_effect_prec_sd", "factor1_effect_ptar_mean", "factor1_effect_ptar_sd", "factor1_seqpos1_effect_prec_mean", "factor1_seqpos2_effect_prec_mean", "factor1_seqpos3_effect_prec_mean", "factor1_seqpos1_effect_prec_sd", "factor1_seqpos2_effect_prec_sd", "factor1_seqpos3_effect_prec_sd", "factor1_seqpos1_effect_ptar_mean", "factor1_seqpos2_effect_ptar_mean", "factor1_seqpos3_effect_ptar_mean", "factor1_seqpos1_effect_ptar_sd", "factor1_seqpos2_effect_ptar_sd", "factor1_seqpos3_effect_ptar_sd","pitem_i","prec_i","factor1_eff_prec","factor1_eff_ptar","seqpos1_eff_prec","seqpos1_eff_ptar","seqpos2_eff_prec","seqpos2_eff_ptar","seqpos3_eff_prec","seqpos3_eff_ptar","factor1_seqpos1_eff_prec","factor1_seqpos1_eff_ptar","factor1_seqpos2_eff_prec","factor1_seqpos2_eff_ptar","factor1_seqpos3_eff_prec","factor1_seqpos3_eff_ptar""factor2_effect_prec_mean","factor2_effect_prec_sd","factor2_effect_ptar_mean","factor2_effect_ptar_sd","factor1_factor2_effect_prec_mean","factor1_factor2_effect_prec_sd","factor1_factor2_effect_ptar_mean","factor1_factor2_effect_ptar_sd","factor2_eff_prec","factor2_eff_ptar","factor1_factor2_eff_prec","factor1_factor2_eff_ptar") #model parameter names
+parameters <- c("Pmem", "Ptarget", "Mprecision","precision","deviance","SDPrecision") #model parameter names
+
+if(EXPT!=3){
+if(effects==1){
+parameters<-c(parameters,"factor2_effect_prec_mean","factor2_effect_prec_sd","factor2_effect_ptar_mean","factor2_effect_ptar_sd","factor1_effect_prec_mean","factor1_effect_prec_sd","factor1_effect_ptar_mean", "factor1_effect_ptar_sd","factor1_factor2_effect_prec_mean","factor1_factor2_effect_prec_sd","factor1_factor2_effect_ptar_mean","factor1_factor2_effect_ptar_sd","factor1_eff_prec","factor1_eff_ptar","factor2_eff_prec","factor2_eff_ptar","factor1_factor2_eff_prec","factor1_factor2_eff_ptar")
+}else if(effects==2){
+parameters<-c(parameters,"factor1_effect_prec_mean","factor1_effect_prec_sd","factor1_effect_ptar_mean", "factor1_effect_ptar_sd","factor1_eff_prec","factor1_eff_ptar")
+}else if(effects==3){
+parameters<-c(parameters,"factor2_effect_prec_mean","factor2_effect_prec_sd","factor2_effect_ptar_mean", "factor2_effect_ptar_sd","factor2_eff_prec","factor2_eff_ptar")
+}else if(effects==5){
+parameters<-c(parameters,"factor2_effect_prec_mean","factor2_effect_prec_sd","factor2_effect_ptar_mean","factor2_effect_ptar_sd","factor1_effect_prec_mean","factor1_effect_prec_sd","factor1_effect_ptar_mean", "factor1_effect_ptar_sd","factor1_eff_prec","factor1_eff_ptar","factor2_eff_prec","factor2_eff_ptar")
+}else if(effects==6){
+parameters<-c(parameters,"factor1_effect_prec_mean","factor1_effect_prec_sd","factor1_eff_prec")
+}else if(effects==7){
+parameters<-c(parameters,"factor1_effect_ptar_mean","factor1_effect_ptar_sd","factor1_eff_ptar")
+}
+}else if(EXPT==3){
+if(effects==1){
+parameters<-c(parameters,"seqpos1_effect_prec_mean", "seqpos2_effect_prec_mean", "seqpos3_effect_prec_mean", "seqpos1_effect_prec_sd", "seqpos2_effect_prec_sd", "seqpos3_effect_prec_sd", "seqpos1_effect_ptar_mean", "seqpos2_effect_ptar_mean", "seqpos3_effect_ptar_mean", "seqpos1_effect_ptar_sd", "seqpos2_effect_ptar_sd", "seqpos3_effect_ptar_sd", "factor1_effect_prec_mean", "factor1_effect_prec_sd", "factor1_effect_ptar_mean", "factor1_effect_ptar_sd", "factor1_seqpos1_effect_prec_mean", "factor1_seqpos2_effect_prec_mean", "factor1_seqpos3_effect_prec_mean", "factor1_seqpos1_effect_prec_sd", "factor1_seqpos2_effect_prec_sd", "factor1_seqpos3_effect_prec_sd", "factor1_seqpos1_effect_ptar_mean", "factor1_seqpos2_effect_ptar_mean", "factor1_seqpos3_effect_ptar_mean", "factor1_seqpos1_effect_ptar_sd", "factor1_seqpos2_effect_ptar_sd", "factor1_seqpos3_effect_ptar_sd","factor1_eff_prec","factor1_eff_ptar","seqpos1_eff_prec","seqpos1_eff_ptar","seqpos2_eff_prec","seqpos2_eff_ptar","seqpos3_eff_prec","seqpos3_eff_ptar","factor1_seqpos1_eff_prec","factor1_seqpos1_eff_ptar","factor1_seqpos2_eff_prec","factor1_seqpos2_eff_ptar","factor1_seqpos3_eff_prec","factor1_seqpos3_eff_ptar")
+}else if(effects==2){
+parameters<-c(parameters,"factor1_effect_prec_mean","factor1_effect_prec_sd","factor1_effect_ptar_mean", "factor1_effect_ptar_sd","factor1_eff_prec","factor1_eff_ptar")
+}else if(effects==3){
+parameters<-c(parameters,"seqpos1_effect_prec_mean", "seqpos2_effect_prec_mean", "seqpos3_effect_prec_mean", "seqpos1_effect_prec_sd", "seqpos2_effect_prec_sd", "seqpos3_effect_prec_sd", "seqpos1_effect_ptar_mean", "seqpos2_effect_ptar_mean", "seqpos3_effect_ptar_mean", "seqpos1_effect_ptar_sd", "seqpos2_effect_ptar_sd", "seqpos3_effect_ptar_sd","seqpos1_eff_prec","seqpos1_eff_ptar","seqpos2_eff_prec","seqpos2_eff_ptar","seqpos3_eff_prec","seqpos3_eff_ptar")
+}else if(effects==5){
+parameters<-c(parameters,"seqpos1_effect_prec_mean", "seqpos2_effect_prec_mean", "seqpos3_effect_prec_mean", "seqpos1_effect_prec_sd", "seqpos2_effect_prec_sd", "seqpos3_effect_prec_sd", "seqpos1_effect_ptar_mean", "seqpos2_effect_ptar_mean", "seqpos3_effect_ptar_mean", "seqpos1_effect_ptar_sd", "seqpos2_effect_ptar_sd", "seqpos3_effect_ptar_sd", "factor1_effect_prec_mean", "factor1_effect_prec_sd", "factor1_effect_ptar_mean", "factor1_effect_ptar_sd","factor1_eff_prec","factor1_eff_ptar","seqpos1_eff_prec","seqpos1_eff_ptar","seqpos2_eff_prec","seqpos2_eff_ptar","seqpos3_eff_prec","seqpos3_eff_ptar")
+}else if(effects==6){
+parameters<-c(parameters,"factor1_effect_prec_mean","factor1_effect_prec_sd","factor1_eff_prec")
+}else if(effects==7){
+parameters<-c(parameters,"factor1_effect_ptar_mean","factor1_effect_ptar_sd","factor1_eff_ptar")
+}
+}
+
+
 parameters<-c(parameters, "loglik")
 
 
-nadapt <- 5000        #number of adaptations
-niterations <- 10000  #number of iterations
-nchains <- 4          #number of chains
+nadapt <- 2500        #number of adaptations #5000
+niterations <- 5000  #number of iterations  #10000
+nchains <- 4          #number of chains      #4 
 
 setwd(root)                                   #use scripts that can be found in this folder
 
@@ -151,6 +183,7 @@ if (EXPT==1 | EXPT==2){
      
       samples <- as.matrix(codasamples)
 
+
       # calculate DIC
       Devchain <- samples[, "deviance"]
       meanDev <- mean(Devchain)
@@ -180,7 +213,7 @@ if (EXPT==1 | EXPT==2){
       save(WAICX, file=waicfile)
       
 
-      save(file=paste0(root, "EXPT_", toString(EXPT), "_effects_",  toString(effects),".RData"))
+      save(samples,file=paste0(root, "EXPT_", toString(EXPT), "_effects_",  toString(effects),".RData"))
     } 
   )  #try
   } #effects
