@@ -6,11 +6,10 @@ model{
     	postpred[i]   ~ dvonmises(mn[i],       prec_i[i])
     	loglik[i] <- dlogvonmises(x[i], mn[i], prec_i[i])
     	mn[i]     <- m[i, item[i]]
-		item[i] ~ dcat(Pitem[id[i],i,1:setsize[i]])            #samples item that memory response comes from
+		item[i] ~ dcat(Pitem[i,1:setsize[i]])            #samples item that memory response comes from
         # Pitem is the probability of reporting the target or 2 nontargets. 
         # this gets modified on circle trials, increasing Ptarget and decreasing Pnotarget. 
 
-        pitem_i[i,1:setsize[i]] <- Pitem[id[i],i,1:setsize[i]] + c(1,rep((-1/(setsize[i]-1)),(setsize[i]-1)))
         # effect of condition on probability of choosing target
         # precision on each trial is the gamma-sampled precision for this subject, plus 
         # some effect of the circle/mask
@@ -25,19 +24,23 @@ for (j in 1:nsubj)  {
   # drawn from beta distribution around Pmem
   pm[j]      ~ dbeta(PmA, PmB)T(0.001, 0.999)   #probability that response comes from memory (any item)
   factor1_eff_prec[j] ~ dnorm( factor1_effect_prec_mean, factor1_effect_prec_sd )
-
+  factor1_eff_ptar[j] ~ dnorm( factor1_effect_ptar_mean, factor1_effect_ptar_sd )
+  
+  
   # subject level Ptarget drawn from beta distribution around Ptarget
   pt[j] ~ dbeta(PtA, PtB)T(0.001, 0.999)   #probability that response comes from target, given it comes from memory
 
   # Pitem [ subject, targ/nontarg/notarg ]
-  for (i in 1:N){
-  Pitem[j,i,1] <- pt[j]              #conditional P(target), given response comes from memory
-  for (k in 2:setsize[i]) {
-      Pitem[j,i,k] <- (1-pt[j])/(setsize[i]-1)  #conditional P(recall item k), given response from memory
-  }
-  }
+
   precision[j] ~ dgamma(Pshape, Prate)
 }
+
+  for (i in 1:N){
+  Pitem[i,1] <- pt[id[i]]              #conditional P(target), given response comes from memory
+  for (k in 2:setsize[i]) {
+      Pitem[i,k] <- (1-pt[id[i]])/(setsize[i]-1)  #conditional P(recall item k), given response from memory
+  }
+  }
     
 	# Priors
   
@@ -56,5 +59,7 @@ for (j in 1:nsubj)  {
 
   factor1_effect_prec_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.
   factor1_effect_prec_sd   ~ dexp(0.1)        # prior for effect of circle relative to arrow.
-	
+  factor1_effect_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.
+  factor1_effect_ptar_sd   ~ dexp(0.1)        # prior for effect of circle relative to arrow.
+
 }
