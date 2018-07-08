@@ -1,10 +1,11 @@
 
 clear all
 close all
+root='...'
 
 for EXPT=1:3
     for effects=1:7
-        samples{EXPT}{effects}=load(['C:\Users\youne\Documents\Matlab Scripts\Bare Probe\NewHierarchicalModelling\EXPT_' num2str(EXPT) '_effects_' num2str(effects)]);
+        samples{EXPT}{effects}=load([root num2str(EXPT) '_effects_' num2str(effects)]);
     end
 end
 
