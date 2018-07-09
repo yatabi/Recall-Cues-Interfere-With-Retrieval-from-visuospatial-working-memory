@@ -214,6 +214,8 @@ if (EXPT==1 | EXPT==2){
       
 
       save(samples,file=paste0(root, "EXPT_", toString(EXPT), "_effects_",  toString(effects),".RData"))
+      writeMat(paste0(root, "EXPT_", toString(EXPT), "_effects_",  toString(effects),".mat"),samples=samples)
+
     } 
   )  #try
   } #effects
