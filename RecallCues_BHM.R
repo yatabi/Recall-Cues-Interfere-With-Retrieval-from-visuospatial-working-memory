@@ -9,12 +9,13 @@ graphics.off()
 library(rjags)
 library(circular)
 library(coda)
+library(R.matlab)
 load.module("vonmises") #source: Oberauer et al., 2017 (osf.io/wjg7y/) 
 load.module("dic")
-root<-"..." #where your data is stored
+root<-"C:/Users/youne/Documents/Matlab Scripts/Bare Probe/NewHierarchicalModelling/" #where your data is stored
 
 for(EXPT in 1:3) {
-for(effects in 1:7){
+for(effects in 1){
 postpred <- 0
 diags <- 0 #0 = none, 1 = Gelman-Rubin Rhat
 parameters <- c("Pmem", "Ptarget", "Mprecision","precision","deviance","SDPrecision") #model parameter names
@@ -25,7 +26,7 @@ parameters<-c(parameters,"factor2_effect_prec_mean","factor2_effect_prec_sd","fa
 }else if(effects==2){
 parameters<-c(parameters,"factor1_effect_prec_mean","factor1_effect_prec_sd","factor1_effect_ptar_mean", "factor1_effect_ptar_sd","factor1_eff_prec","factor1_eff_ptar")
 }else if(effects==3){
-parameters<-c(parameters,"factor2_effect_prec_mean","factor2_effect_prec_sd","factor2_effect_ptar_mean", "factor2_effect_ptar_sd","factor2_eff_prec","factor2_eff_ptar")
+parameters<-c(parameters,"factor1_effect_prec_mean","factor1_effect_prec_sd","factor1_effect_ptar_mean", "factor1_effect_ptar_sd","factor1_eff_prec","factor1_eff_ptar")
 }else if(effects==5){
 parameters<-c(parameters,"factor2_effect_prec_mean","factor2_effect_prec_sd","factor2_effect_ptar_mean","factor2_effect_ptar_sd","factor1_effect_prec_mean","factor1_effect_prec_sd","factor1_effect_ptar_mean", "factor1_effect_ptar_sd","factor1_eff_prec","factor1_eff_ptar","factor2_eff_prec","factor2_eff_ptar")
 }else if(effects==6){
@@ -50,7 +51,7 @@ parameters<-c(parameters,"factor1_effect_ptar_mean","factor1_effect_ptar_sd","fa
 }
 
 
-parameters<-c(parameters, "loglik")
+parameters<-c(parameters, "loglik","pt","pm")
 
 
 nadapt <- 2500        #number of adaptations #5000
@@ -214,8 +215,7 @@ if (EXPT==1 | EXPT==2){
       
 
       save(samples,file=paste0(root, "EXPT_", toString(EXPT), "_effects_",  toString(effects),".RData"))
-      writeMat(paste0(root, "EXPT_", toString(EXPT), "_effects_",  toString(effects),".mat"),samples=samples)
-
+      writeMat(paste0(root, "EXPT_", toString(EXPT), "_effects_",  toString(effects),".mat"),samples=samples,parameters=colnames(samples))
     } 
   )  #try
   } #effects
