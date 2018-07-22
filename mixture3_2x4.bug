@@ -53,12 +53,12 @@ for (j in 1:nsubj)  {
   seqpos3_eff_prec[j] ~ dnorm( seqpos3_effect_prec_mean, seqpos3_effect_prec_sd )
   seqpos3_eff_ptar[j] ~ dnorm( seqpos3_effect_ptar_mean, seqpos3_effect_ptar_sd )
   
-  factor1_seqpos1_eff_prec[j] ~ dnorm( factor1_seqpos1_eff_prec_mean, factor1_seqpos1_eff_prec_sd )
-  factor1_seqpos1_eff_ptar[j] ~ dnorm( factor1_seqpos1_eff_ptar_mean, factor1_seqpos1_eff_ptar_sd )
-  factor1_seqpos2_eff_prec[j] ~ dnorm( factor1_seqpos2_eff_prec_mean, factor1_seqpos2_eff_prec_sd )
-  factor1_seqpos2_eff_ptar[j] ~ dnorm( factor1_seqpos2_eff_ptar_mean, factor1_seqpos2_eff_ptar_sd )
-  factor1_seqpos3_eff_prec[j] ~ dnorm( factor1_seqpos3_eff_prec_mean, factor1_seqpos3_eff_prec_sd )
-  factor1_seqpos3_eff_ptar[j] ~ dnorm( factor1_seqpos3_eff_ptar_mean, factor1_seqpos3_eff_ptar_sd )
+  factor1_seqpos1_eff_prec[j] ~ dnorm( factor1_seqpos1_effect_prec_mean, factor1_seqpos1_effect_prec_sd )
+  factor1_seqpos1_eff_ptar[j] ~ dnorm( factor1_seqpos1_effect_ptar_mean, factor1_seqpos1_effect_ptar_sd )
+  factor1_seqpos2_eff_prec[j] ~ dnorm( factor1_seqpos2_effect_prec_mean, factor1_seqpos2_effect_prec_sd )
+  factor1_seqpos2_eff_ptar[j] ~ dnorm( factor1_seqpos2_effect_ptar_mean, factor1_seqpos2_effect_ptar_sd )
+  factor1_seqpos3_eff_prec[j] ~ dnorm( factor1_seqpos3_effect_prec_mean, factor1_seqpos3_effect_prec_sd )
+  factor1_seqpos3_eff_ptar[j] ~ dnorm( factor1_seqpos3_effect_ptar_mean, factor1_seqpos3_effect_ptar_sd )
 
   # subject level Ptarget drawn from beta distribution around Ptarget
   pt[j] ~ dbeta(PtA, PtB)T(0.001, 0.999)   #probability that response comes from target, given it comes from memory
@@ -110,19 +110,19 @@ for (j in 1:nsubj)  {
   factor1_effect_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of nomask relative to mask.
   factor1_effect_ptar_sd   ~ dexp(0.1)        # prior for effect of nomask relative to mask.
   
-  factor1_seqpos1_eff_prec_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
-  factor1_seqpos1_eff_prec_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow.  
-  factor1_seqpos1_eff_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
-  factor1_seqpos1_eff_ptar_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow. 
+  factor1_seqpos1_effect_prec_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
+  factor1_seqpos1_effect_prec_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow.  
+  factor1_seqpos1_effect_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
+  factor1_seqpos1_effect_ptar_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow. 
   
-  factor1_seqpos2_eff_prec_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
-  factor1_seqpos2_eff_prec_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow.  
-  factor1_seqpos2_eff_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
-  factor1_seqpos2_eff_ptar_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow. 
+  factor1_seqpos2_effect_prec_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
+  factor1_seqpos2_effect_prec_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow.  
+  factor1_seqpos2_effect_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
+  factor1_seqpos2_effect_ptar_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow. 
   
-  factor1_seqpos3_eff_prec_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
-  factor1_seqpos3_eff_prec_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow.  
-  factor1_seqpos3_eff_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
-  factor1_seqpos3_eff_ptar_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow. 
+  factor1_seqpos3_effect_prec_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
+  factor1_seqpos3_effect_prec_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow.  
+  factor1_seqpos3_effect_ptar_mean ~ dnorm(0, 0.2)    # prior for effect of circle relative to arrow.  
+  factor1_seqpos3_effect_ptar_sd   ~ dexp(0.1)    	  # prior for effect of circle relative to arrow. 
 	
 }
