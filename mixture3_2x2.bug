@@ -9,7 +9,7 @@ model{
 		item[i] ~ dcat(pitem_i[i,1:setsize[i]])            #samples item that memory response comes from
         # Pitem is the probability of reporting the target or 2 nontargets. 
         # this gets modified on circle trials, increasing Ptarget and decreasing Pnotarget. 
-        pitem_i[i,1:setsize[i]] <- c(ptarget_i[i], rep((1-ptarget_i[i])/(setsize[i]-1),setsize[i]-1))
+        pitem_i[i,1:setsize[i]] <- c(ptarget_i[i], rep((1-ptarget_i[i])/(setsize[i]-1),setsize[i]-1)) 
 		ptarget_i[i] <- exp(cond_eff[i])*pt[id[i]]/((exp(cond_eff[i])-1)*pt[id[i]]+1)
         # effect of condition on probability of choosing target
         cond_eff[i] <- factor2[i] * factor2_eff_ptar[ id[i] ] + factor1[i] * factor1_eff_ptar[ id[i] ] + factor1[i] * factor2[i] * factor1_factor2_eff_ptar[id[i]]
