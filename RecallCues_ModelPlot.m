@@ -4,7 +4,7 @@ close all
 Labels={'Three Items','Five Items';'No Mask','Mask'};
 maxprecision=[22 22 22];
 NC=[2 2 4];
-root='C:\Users\youne\Documents\Matlab Scripts\Bare Probe\NewHierarchicalModelling\';
+root='...';
 EXPT=3;
 load([root 'EXPT_' num2str(EXPT) '_effects_1.mat']);
 
