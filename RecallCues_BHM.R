@@ -12,7 +12,7 @@ library(coda)
 library(R.matlab)
 load.module("vonmises") #source: Oberauer et al., 2017 (osf.io/wjg7y/) 
 load.module("dic")
-root<-"C:/Users/youne/Documents/Matlab Scripts/Bare Probe/NewHierarchicalModelling/" #where your data is stored
+root<-"..." #where your data is stored
 
 for(EXPT in 1:3) {
 for(effects in 1){
